@@ -1,2 +1,2 @@
-# core
-Core Model Types and Schemas for Burfa Models
+# Burfa Core
+Base Utilities for Burfa Packages

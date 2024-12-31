@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "burfacore"
+version = "0.1.0"
+description = "Base Utilities for Burfa Packages"
+authors = ["eneyi <ruth.ikwu@outlook.com>"]
+packages = [{include = "*", from="src"}]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12, <=3.13"
+pydantic = "^2.10.4"
+ruff = "^0.8.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
