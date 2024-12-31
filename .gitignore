@@ -8,3 +8,5 @@ test.py
 **.logs/
 .env.sh
 .env
+**test.py
+.todo.md

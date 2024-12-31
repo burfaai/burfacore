@@ -19,10 +19,10 @@ def new_id():
 
 
 class BurfaBase(BaseModel):
-    """_summary_: Class for Burfa base"""
+    """_summary_: Base Class for Burfa Data Models"""
 
     class Config:
-        """_summary_: Pydantic Config class for Hyplate Models."""
+        """_summary_: Pydantic Config class for Burfa Models."""
 
         arbitrary_types_allowed = True
         use_enum_values = True
