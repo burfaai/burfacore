@@ -3,7 +3,6 @@ name = "burfacore"
 version = "0.1.0"
 description = "Base Utilities for Burfa Packages"
 authors = ["eneyi <ruth.ikwu@outlook.com>"]
-packages = [{include = "*", from="src"}]
 readme = "README.md"
 
 [tool.poetry.dependencies]
