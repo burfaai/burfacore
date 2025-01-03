@@ -1,3 +1,5 @@
+import asyncio
+import multiprocessing
 from abc import abstractmethod
 from functools import cached_property, partial, reduce
 from typing import Any, TypeVar, Generic, Callable, Sequence
@@ -67,12 +69,16 @@ class BasePipeline(Generic[T, P], metaclass=PipelineMeta):
         )
         return result
 
-    def run(self, *args, **kwargs) -> P:
+    async def run_async(self, *args, **kwargs) -> P:
         """_summary_: Run Pipeline"""
         self._init_pipeline(*args, **kwargs)
         return reduce(
             lambda _, _next: self._call_func(_next, *args, **kwargs), self.functions, 0
         )
+
+    def run(self, *args, **kwargs) -> P:
+        """_summary_: Run Pipeline"""
+        asyncio.run(self.run_async(*args, **kwargs))
 
     @abstractmethod
     def start(self, *args, **kwargs):
@@ -92,6 +98,13 @@ class BaseAgent(Generic[T, P, M]):
         self.request = request
 
     @abstractmethod
-    def run(self, *args, **kwargs) -> M:
+    def execute(self, *args, **kwargs) -> M:
         """_summary_: Execute"""
         raise NotImplementedError("Method not implemented")
+
+    def run(self, *args, **kwargs) -> M:
+        """_summary_: Run"""
+        with multiprocessing.Pool() as pool:
+            return pool.map(
+                partial(self.execute(*args, **kwargs)), range(self.request.iterations)
+            )

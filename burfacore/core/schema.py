@@ -8,7 +8,7 @@ from burfacore.core.types import (
     TaskType,
     Continent,
     Country,
-    SectorType,
+    Sector,
     Language,
 )
 
@@ -71,35 +71,29 @@ def burfa_model_factory(
 class BurfaContext(BurfaBase):
     """_summary_: Base Classfor Burfa Context"""
 
-    continent: Continent | None = Field(
+    continent: list[Continent] | None = Field(
         default=None,
         title="Component Continent",
         description="Continent of the component",
         example=Continent.get_values(),
     )
-    country: Country = Field(
-        default=Country.ANY.value,
+    country: list[Country] = Field(
+        default=[Country.ANY.value],
         title="Component Country",
         description="Country of the component",
         example=Country.get_values(),
     )
-    state: str | None = Field(
+    state: list[str] | None = Field(
         default=None,
         title="Component State",
         description="State of the component",
         example="California",
     )
-    sector: SectorType = Field(
-        default=SectorType.ANY.value,
+    sector: list[Sector] = Field(
+        default=[Sector.ANY.value],
         title="Business Domain",
         description="Business domain of the component",
-        example=SectorType.get_values(),
-    )
-    language: Language = Field(
-        default=Language.ENGLISH.value,
-        title="Component Language",
-        description="DatasetLanguage of the component",
-        example=Language.get_values(),
+        example=Sector.get_values(),
     )
 
 
@@ -179,4 +173,10 @@ class BurfaRequest(BurfaBase):
         example=1,
         ge=1,
         le=10,
+    )
+    language: Language = Field(
+        default=Language.ENGLISH.value,
+        title="Component Language",
+        description="DatasetLanguage of the component",
+        example=Language.get_values(),
     )

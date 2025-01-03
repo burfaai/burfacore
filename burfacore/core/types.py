@@ -72,11 +72,13 @@ class DatasetType(BurfaEnum):
     VIDEO = "video"
 
 
-class SectorType(BurfaEnum):
+class Sector(BurfaEnum):
     """_summary_: Enum for Burfa Industry Sectors."""
 
     HEALTH = "health"
+    MEDICAL = "medical"
     FINANCE = "finance"
+    INSURANCE = "insurance"
     COPORATE_LAW = "corporate law"
     CRIMINAL_LAW = "criminal law"
     EDUCATION = "education"
@@ -84,6 +86,8 @@ class SectorType(BurfaEnum):
     TRANSPORT = "transport"
     GOVERNMENT = "government"
     LAW_ENFORCEMENT = "law enforcement"
+    MEDIA = "media"
+    RETAIL = "retail"
     ANY = "any"
 
 
@@ -98,7 +102,7 @@ class TaskType(BurfaEnum):
     MULTI_CLASSIFICATION = "multi-classification"
 
 
-class MetricType(BurfaEnum):
+class ComplianceCategory(BurfaEnum):
     """_summary_: Enum for Burfa Guide Category"""
 
     BIAS = "bias"
@@ -109,7 +113,6 @@ class MetricType(BurfaEnum):
     TRANSPARENCY = "transparency"
     ACCOUNTABILITY = "accountability"
     EXPLAINABILITY = "explainability"
-    MINIMIZATION = "minimization"
 
 
 class TrademarkType(BurfaEnum):
