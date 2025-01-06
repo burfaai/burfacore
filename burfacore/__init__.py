@@ -5,7 +5,7 @@ from burfacore.core.schema import (
     BaseFeature,
     burfa_model_factory,
 )
-from burfacore.utils.utils import burfa_step
+from burfacore.utils import burfa_step, GoogleSheetReader
 
 __all__ = [
     "BurfaModel",
@@ -16,4 +16,5 @@ __all__ = [
     "BaseFeature",
     "burfa_model_factory",
     "burfa_step",
+    "GoogleSheetReader",
 ]

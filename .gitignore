@@ -10,3 +10,5 @@ test.py
 .env
 **test.py
 .todo.md
+test.json
+**.pytest_cache/
