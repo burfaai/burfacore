@@ -113,6 +113,7 @@ class ComplianceCategory(BurfaEnum):
     TRANSPARENCY = "transparency"
     ACCOUNTABILITY = "accountability"
     EXPLAINABILITY = "explainability"
+    ANY = "any"
 
 
 class TrademarkType(BurfaEnum):
