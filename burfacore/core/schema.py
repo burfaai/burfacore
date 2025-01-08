@@ -49,8 +49,8 @@ class BurfaBase(BaseModel):
         """_summary_: Normalize Data"""
         if isinstance(data, dict):
             for key, value in data.items():
-                if isinstance(value, str):
-                    data[key] = value.strip().lower()
+                if isinstance(value, str) and not value.startswith("http"):
+                    data[key] = value.strip().lower().strip()
         return data
 
 
