@@ -36,8 +36,8 @@ class BurfaBase(BaseModel):
         example="123e4567e89b12d3a456426614174000",
         exclude=True,
     )
-    created_at: str = Field(
-        default=datetime.now().isoformat(),
+    created_at: datetime = Field(
+        default=datetime.now(),
         title="Created At",
         description="Creation Timestamp",
         example="2021-09-01T00:00:00Z",
