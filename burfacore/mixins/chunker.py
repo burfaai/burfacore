@@ -9,9 +9,9 @@ from pyquery import PyQuery
 class TextChunkerMixin:
     """_summary_"""
 
-    def text_chunks(self, text: str = None) -> list[list[str]]:
+    def text_chunks(self, context: str = None) -> list[list[str]]:
         """_summary_: Chunk Text"""
-        text = text or self.text
+        text = context or self.context
         blob = TextBlob(text)
         sentences = blob.sentences
         _chunks, _chunk = [], []
@@ -45,7 +45,7 @@ class ChunkHTMLMixin(TextChunkerMixin):
         )
 
     @cached_property
-    def text(self) -> str:
+    def context(self) -> str:
         """_summary_: Page Text"""
         return self.pq.text()
 

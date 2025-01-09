@@ -20,7 +20,7 @@ class BaseTextMixin:
     @cached_property
     def blob(self) -> TextBlob:
         """_summary_: TextBlob Object"""
-        return _get_blob(self.text)
+        return _get_blob(self.context)
 
     @cached_property
     def stripped_(self) -> str:
@@ -44,7 +44,7 @@ class TextFeaturesMixin:
     @cached_property
     def blob(self) -> TextBlob:
         """_summary_: TextBlob Object"""
-        return _get_blob(self.text)
+        return _get_blob(self.context)
 
     @cached_property
     def normalized_text_(self) -> str:
@@ -80,7 +80,7 @@ class TextEntityMixin:
     @cached_property
     def blob(self) -> TextBlob:
         """_summary_: TextBlob Object"""
-        return _get_blob(self.text)
+        return _get_blob(self.context)
 
     def keywords_(self, *args, **kwargs) -> list[str]:
         """_summary_"""
@@ -114,7 +114,7 @@ class TextEmbeddingMixin:
     @cached_property
     def blob(self) -> TextBlob:
         """_summary_: TextBlob Object"""
-        return _get_blob(self.text)
+        return _get_blob(self.context)
 
     def embeddings_(self, *args, **kwargs) -> dict[str, list[float | list[float]]]:
         """_summary_"""
