@@ -6,6 +6,7 @@ from burfacore.core.schema import (
     burfa_model_factory,
 )
 from burfacore.utils import burfa_step, GoogleSheetReader
+from burfacore.mixins import TextMixin
 
 __all__ = [
     "BurfaModel",
@@ -17,4 +18,5 @@ __all__ = [
     "burfa_model_factory",
     "burfa_step",
     "GoogleSheetReader",
+    "TextMixin",
 ]
