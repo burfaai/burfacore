@@ -44,7 +44,7 @@ class BurfaBase(BaseModel):
         example="2021-09-01T00:00:00Z",
     )
 
-    @model_validator(mode="before")
+    '''@model_validator(mode="before")
     @classmethod
     def normalize(cls, data: dict) -> dict:
         """_summary_: Normalize Data"""
@@ -53,6 +53,7 @@ class BurfaBase(BaseModel):
                 if isinstance(value, str) and not value.startswith("http"):
                     data[key] = value.strip().lower().strip()
         return data
+    '''
 
     @override
     def model_dump(self, *args, **kwargs) -> dict[str, Any]:

@@ -1,65 +1,125 @@
-from abc import abstractmethod
 from functools import cached_property
 import numpy as np
-
-from pydantic import computed_field
 
 import nltk
 from textblob import TextBlob
 from sentence_transformers import SentenceTransformer
 
-
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-class TextMixin:
-    """_summary_"""
+def _get_blob(text: str) -> TextBlob:
+    """_summary_: TextBlob Object"""
+    _norm = " ".join([i.strip() for i in text.strip().split()])
+    return TextBlob(_norm)
 
-    @abstractmethod
+
+class BaseTextMixin:
+    """_summary_: A Base Class for Text Processing Functions"""
+
     @cached_property
     def blob(self) -> TextBlob:
-        """_summary_"""
-        raise NotImplementedError("Method not implemented")
+        """_summary_: TextBlob Object"""
+        return _get_blob(self.text)
 
     @cached_property
-    def stripped(self) -> str:
+    def stripped_(self) -> str:
         """_summary_"""
-        text_ = self.blob.raw.strip().split()
-        text = " ".join([i.strip().lower() for i in text_])
-        return TextBlob(text).stripped
+        return self.blob.stripped
 
-    @computed_field
-    @property
-    def entities(self) -> list[dict]:
+    @cached_property
+    def tokens_(self) -> list[str]:
         """_summary_"""
-        _entities = nltk.ne_chunk(self.blob.tags)
+        return self.blob.words
+
+    @cached_property
+    def sentences_(self) -> list[str]:
+        """_summary_"""
+        return [str(i) for i in self.blob.sentences]
+
+
+class TextFeaturesMixin:
+    """_summary_"""
+
+    @cached_property
+    def blob(self) -> TextBlob:
+        """_summary_: TextBlob Object"""
+        return _get_blob(self.text)
+
+    @cached_property
+    def normalized_text_(self) -> str:
+        """_summary_: Normalized Text Data"""
+        return " ".join(self.blob.tokens)
+
+    @cached_property
+    def token_count_(self) -> int:
+        """_summary_"""
+        return len(self.blob.tokens)
+
+    @cached_property
+    def sentence_count_(self) -> int:
+        """_summary_"""
+        return len(self.blob.sentences)
+
+    @cached_property
+    def entropy_(self) -> float:
+        """_summary_"""
+        return np.sum(
+            [
+                -i
+                / len(self.normalized_text_)
+                * np.log2(i / len(self.normalized_text_))
+                for i in np.unique(list(self.normalized_text_), return_counts=True)[1]
+            ]
+        )
+
+
+class TextEntityMixin:
+    """_summary_"""
+
+    @cached_property
+    def blob(self) -> TextBlob:
+        """_summary_: TextBlob Object"""
+        return _get_blob(self.text)
+
+    def keywords_(self, *args, **kwargs) -> list[str]:
+        """_summary_"""
+        _keywords = {
+            token: self.blob.tokens.count(token) / (self.blob.tokens.index(token) + 1)
+            for token in set(
+                [i[0] for i in nltk.pos_tag(self.blob.tokens) if i[1].startswith("N")]
+            )
+        }
+        return dict(sorted(_keywords.items(), key=lambda x: x[1], reverse=True))
+
+    def entities_(self, *args, **kwargs) -> list[dict]:
+        """_summary_"""
         return list(
-            filter(
-                lambda e: isinstance(e["entity"], nltk.Tree),
-                map(
-                    lambda entity: dict(entity=entity, pos=_entities.index(entity)),
-                    _entities,
+            map(
+                lambda e: dict(
+                    label=e.label().lower(),
+                    entity=" ".join(i[0] for i in e.leaves()).lower(),
+                ),
+                filter(
+                    lambda chunk: isinstance(chunk, nltk.Tree),
+                    nltk.ne_chunk(self.blob.tags),
                 ),
             )
         )
 
-    @computed_field
-    @property
-    def entropy(self) -> float:
-        """_summary_"""
-        return np.sum(
-            [
-                -i / len(self.stripped) * np.log2(i / len(self.stripped))
-                for i in np.unique(list(self.stripped), return_counts=True)[1]
-            ]
-        )
 
-    @computed_field
-    @property
-    def embeddings(self) -> dict[str, list[float | list[float]]]:
+class TextEmbeddingMixin:
+    """_summary_"""
+
+    @cached_property
+    def blob(self) -> TextBlob:
+        """_summary_: TextBlob Object"""
+        return _get_blob(self.text)
+
+    def embeddings_(self, *args, **kwargs) -> dict[str, list[float | list[float]]]:
         """_summary_"""
         _embeddings = model.encode(
-            self.blob.correct().stripped,
+            " ".join(self.blob.words),
             output_value=None,
             # TODO: Full Embeddings in Production
         )
@@ -68,9 +128,11 @@ class TextMixin:
             for k in ["token_embeddings", "sentence_embedding"]
         }
 
-    @computed_field
-    @property
-    def compact_summary(self) -> str:
+
+class TextSummaryMixin:
+    """_summary_"""
+
+    def summary_(self, *args, **kwargs) -> str:
         """_summary_"""
         # TODO: Implement Custom Summarizer with Agent
-        return "Summary Here"
+        return "I will set up a custom summarizer soon"
