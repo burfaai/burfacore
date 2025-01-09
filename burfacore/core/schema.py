@@ -1,5 +1,6 @@
 from uuid import uuid4
 from datetime import datetime
+from typing import Any, override
 from pydantic import BaseModel, Field, model_validator
 
 from burfacore.core.types import (
@@ -52,6 +53,10 @@ class BurfaBase(BaseModel):
                 if isinstance(value, str) and not value.startswith("http"):
                     data[key] = value.strip().lower().strip()
         return data
+
+    @override
+    def model_dump(self, *args, **kwargs) -> dict[str, Any]:
+        return dict(sorted(super().model_dump(*args, **kwargs).items()))
 
 
 def burfa_model_factory(
