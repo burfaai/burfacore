@@ -83,7 +83,8 @@ class TextEntityMixin:
         _raw = self.raw.replace("\n", " ").replace("\xa0", " ")
         return _get_blob(_raw)
 
-    def keywords_(self, *args, **kwargs) -> list[str]:
+    @cached_property
+    def keywords_(self) -> list[str]:
         """_summary_"""
         _keywords = {
             token: self.blob.tokens.count(token) / (self.blob.tokens.index(token) + 1)
@@ -93,7 +94,8 @@ class TextEntityMixin:
         }
         return dict(sorted(_keywords.items(), key=lambda x: x[1], reverse=True))
 
-    def entities_(self, *args, **kwargs) -> list[dict]:
+    @cached_property
+    def entities_(self) -> list[dict]:
         """_summary_"""
         return list(
             map(
