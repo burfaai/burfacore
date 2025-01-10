@@ -36,7 +36,7 @@ class ChunkHTMLMixin(ChunkTextMixin):
     def pq(self) -> PyQuery:
         """_summary_: PyQuery Object"""
         return (
-            PyQuery(self.html)("body")
+            PyQuery(self.html)(self.info_selector)
             .remove("script")
             .remove("style")
             .remove("noscript")
