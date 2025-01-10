@@ -2,14 +2,14 @@ import re
 from functools import cached_property
 from typing import Generator
 
-from textblob import TextBlob
+from textblob import TextBlob, Sentence
 from pyquery import PyQuery
 
 
-class ChunckTextMixin:
+class ChunkTextMixin:
     """_summary_"""
 
-    def text_chunks(self, context: str = None) -> list[list[str]]:
+    def text_chunks(self, context: str = None) -> list[list[Sentence]]:
         """_summary_: Chunk Text"""
         blob = TextBlob(context)
         sentences = blob.sentences
@@ -21,15 +21,15 @@ class ChunckTextMixin:
             if len(tokens) > self.context_window:
                 raise ValueError("Sentence is too long")
             if len(tokens + _chunk) <= self.context_window:
-                _chunk += tokens
+                _chunk += [sentence]
             else:
                 _chunks.append(_chunk)
-                _chunk = tokens
+                _chunk = [sentence]
         _chunks.append(_chunk)
         return _chunks
 
 
-class ChunkHTMLMixin(ChunckTextMixin):
+class ChunkHTMLMixin(ChunkTextMixin):
     """_summary_"""
 
     @cached_property
@@ -71,7 +71,7 @@ class ChunkHTMLMixin(ChunckTextMixin):
             section_chunks = self.text_chunks(section_content.text())
 
             for cindex, chunk in enumerate(section_chunks):
-                chunk_text = " ".join(chunk)
+                chunk_text = ". ".join(chunk)
                 chunk_links = [
                     i for i in section_links if i.keys() & set(chunk_text.split())
                 ]
