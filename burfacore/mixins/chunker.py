@@ -42,21 +42,36 @@ class ChunkTextMixin:
                 yield sentence
 
     def text_chunks(self, context: str) -> Generator[Sentence, None, None]:
-        """_summary_: Queue Context"""
+        """
+        Chunk text into sentences that fit within the context window.
+
+        Args:
+            context (str): Text to be chunked into sentences
+
+        Yields:
+            Sentence: Combined sentences that fit within context window
+        """
         current_chunk = Sentence("")
-        sentences: Sentence = TextBlob(context).sentences
+        sentences: list[Sentence] = TextBlob(context).sentences
+
         for sentence in self._filter_sentences(sentences):
-            for sized in self._split_oversized_sentence(sentence.words):
-                while len(current_chunk.words) + len(sized.words) < self.context_window:
-                    current_chunk = Sentence(" ") + sized + current_chunk
-                yield current_chunk
-                current_chunk = Sentence("")
+            for sized_sentence in self._split_oversized_sentence(sentence.words):
+                combined_length = len(current_chunk.words) + len(sized_sentence.words)
+
+                if combined_length < self.context_window:
+                    current_chunk = sized_sentence + Sentence(" ") + current_chunk
+                else:
+                    if current_chunk.words:
+                        yield current_chunk
+                    current_chunk = sized_sentence
+
+        if current_chunk.words:
+            yield current_chunk
 
 
 class ChunkHTMLMixin(ChunkTextMixin):
     """_summary_"""
 
-    DENIED_TAGS: set[str] = {"style", "script", "noscript"}
     DEFAULT_CHUNKER: str = "<h"
 
     @staticmethod
@@ -105,9 +120,7 @@ class ChunkHTMLMixin(ChunkTextMixin):
             PyQuery: _description_
         """
         content = await self.get_content()
-        pq = PyQuery(content)
-        [pq.remove(tag) for tag in self.DENIED_TAGS]
-        return pq
+        return PyQuery(content).remove("style").remove("script")
 
     async def chunks(self) -> AsyncGenerator:
         """_summary_
