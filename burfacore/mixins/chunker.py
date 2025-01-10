@@ -32,11 +32,20 @@ class ChunkTextMixin:
 class ChunkHTMLMixin(ChunkTextMixin):
     """_summary_"""
 
+    async def _get_pq(self, response) -> PyQuery:
+        """_summary_"""
+        if "playwright_page" in response.meta:
+            page = response.meta["playwright_page"]
+            content = await page.content()
+        else:
+            content = response.body
+        return PyQuery(content)
+
     @cached_property
     def pq(self) -> PyQuery:
         """_summary_: PyQuery Object"""
         return (
-            PyQuery(self.html)(self.info_selector)
+            self._get_pq(self.response)(self.info_selector)
             .remove("script")
             .remove("style")
             .remove("noscript")
