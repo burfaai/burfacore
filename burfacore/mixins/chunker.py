@@ -71,7 +71,7 @@ class ChunkHTMLMixin(ChunkTextMixin):
             section_chunks = self.text_chunks(section_content.text())
 
             for cindex, chunk in enumerate(section_chunks):
-                chunk_text = ". ".join([str(i) for i in chunk])
+                chunk_text = " ".join([str(i) for i in chunk])
                 chunk_links = [
                     i for i in section_links if i.keys() & set(chunk_text.split())
                 ]
