@@ -53,9 +53,9 @@ class ChunkHTMLMixin(ChunkTextMixin):
         Yields:
             Generator[dict, None, None]: (Section Index, Chunk Index, Section Title, Chunk Text, Chunk Links)
         """
-        _pq = await self.pq(self.info_selector)
+        _pq = await self.pq
         _tag = getattr(self, "chunker", "<h")
-        sections = _pq.outer_html().split(_tag)
+        sections = _pq(self.info_selector).outer_html().split(_tag)
 
         for index, section in enumerate(sections[1::]):
             section_content = PyQuery(f"{_tag}{section}")
@@ -76,4 +76,4 @@ class ChunkHTMLMixin(ChunkTextMixin):
                 chunk_links = {
                     k: v for k, v in section_links.items() if k in chunk_text
                 }
-                yield (self.pq, index, cindex, section_title, chunk_text, chunk_links)
+                yield (_pq, index, cindex, section_title, chunk_text, chunk_links)
