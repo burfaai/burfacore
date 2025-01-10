@@ -11,8 +11,7 @@ class ChunckTextMixin:
 
     def text_chunks(self, context: str = None) -> list[list[str]]:
         """_summary_: Chunk Text"""
-        text = context or self.context
-        blob = TextBlob(text)
+        blob = TextBlob(context)
         sentences = blob.sentences
         _chunks, _chunk = [], []
 
