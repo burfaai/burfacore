@@ -80,7 +80,7 @@ class TextEntityMixin:
     @cached_property
     def blob(self) -> TextBlob:
         """_summary_: TextBlob Object"""
-        return _get_blob(self.context)
+        return _get_blob(self.raw)
 
     def keywords_(self, *args, **kwargs) -> list[str]:
         """_summary_"""

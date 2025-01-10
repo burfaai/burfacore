@@ -6,7 +6,7 @@ from textblob import TextBlob
 from pyquery import PyQuery
 
 
-class TextChunkerMixin:
+class ChunckTextMixin:
     """_summary_"""
 
     def text_chunks(self, context: str = None) -> list[list[str]]:
@@ -30,7 +30,7 @@ class TextChunkerMixin:
         return _chunks
 
 
-class ChunkHTMLMixin(TextChunkerMixin):
+class ChunkHTMLMixin(ChunckTextMixin):
     """_summary_"""
 
     @cached_property
