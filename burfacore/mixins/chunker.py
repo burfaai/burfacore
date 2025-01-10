@@ -47,7 +47,7 @@ class ChunkHTMLMixin(ChunkTextMixin):
         _pq = await self._get_pq(self.response)
         return _pq.remove("script").remove("style").remove("noscript").remove("h1")
 
-    async def chunks(self) -> AsyncGenerator[dict]:
+    async def chunks(self) -> AsyncGenerator:
         """_summary_: Chunk HTML 500 Word Context Window
 
         Yields:
