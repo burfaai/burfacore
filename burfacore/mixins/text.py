@@ -87,9 +87,9 @@ class TextEntityMixin:
     def keywords_(self) -> list[str]:
         """_summary_"""
         _keywords = {
-            token: self.blob.tokens.count(token) / (self.blob.tokens.index(token) + 1)
+            token: self.blob.words.count(token) / (self.blob.words.index(token) + 1)
             for token in set(
-                [i[0] for i in nltk.pos_tag(self.blob.tokens) if i[1].startswith("N")]
+                [i[0] for i in nltk.pos_tag(self.blob.words) if i[1].startswith("N")]
             )
         }
         return dict(sorted(_keywords.items(), key=lambda x: x[1], reverse=True))
