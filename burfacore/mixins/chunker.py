@@ -1,6 +1,6 @@
 import re
 from functools import cached_property
-from typing import Generator
+from typing import AsyncGenerator
 
 from textblob import TextBlob, Sentence
 from pyquery import PyQuery
@@ -42,23 +42,18 @@ class ChunkHTMLMixin(ChunkTextMixin):
         return PyQuery(content)
 
     @cached_property
-    def pq(self) -> PyQuery:
+    async def pq(self) -> PyQuery:
         """_summary_: PyQuery Object"""
-        return (
-            self._get_pq(self.response)
-            .remove("script")
-            .remove("style")
-            .remove("noscript")
-            .remove("h1")
-        )
+        _pq = await self._get_pq(self.response)
+        return _pq.remove("script").remove("style").remove("noscript").remove("h1")
 
-    def chunk_html(self) -> Generator[dict, None, None]:
+    async def chunk_html(self) -> AsyncGenerator[dict, None, None]:
         """_summary_: Chunk HTML 500 Word Context Window
 
         Yields:
             Generator[dict, None, None]: (Section Index, Chunk Index, Section Title, Chunk Text, Chunk Links)
         """
-        _pq = self.pq(self.info_selector)
+        _pq = await self.pq(self.info_selector)
         _tag = getattr(self, "chunker", "<h")
         sections = _pq.outer_html().split(_tag)
 
@@ -71,14 +66,14 @@ class ChunkHTMLMixin(ChunkTextMixin):
             else:
                 section_title = section_content("p:first").text()
 
-            section_links = [
-                {i.text(): i.attr("href")} for i in section_content("a").items()
-            ]
+            section_links = {
+                i.text(): i.attr("href") for i in section_content("a").items()
+            }
             section_chunks = self.text_chunks(section_content.text())
 
             for cindex, chunk in enumerate(section_chunks):
                 chunk_text = " ".join([str(i) for i in chunk])
-                chunk_links = [
-                    i for i in section_links if i.keys() & set(chunk_text.split())
-                ]
+                chunk_links = {
+                    k: v for k, v in section_links.items() if k in chunk_text
+                }
                 yield (self.pq, index, cindex, section_title, chunk_text, chunk_links)
