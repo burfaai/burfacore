@@ -45,17 +45,12 @@ class ChunkHTMLMixin(ChunkTextMixin):
     def pq(self) -> PyQuery:
         """_summary_: PyQuery Object"""
         return (
-            self._get_pq(self.response)(self.info_selector)
+            self._get_pq(self.response)
             .remove("script")
             .remove("style")
             .remove("noscript")
             .remove("h1")
         )
-
-    @cached_property
-    def context(self) -> str:
-        """_summary_: Page Text"""
-        return self.pq.text()
 
     def chunk_html(self) -> Generator[dict, None, None]:
         """_summary_: Chunk HTML 500 Word Context Window
@@ -63,10 +58,12 @@ class ChunkHTMLMixin(ChunkTextMixin):
         Yields:
             Generator[dict, None, None]: (Section Index, Chunk Index, Section Title, Chunk Text, Chunk Links)
         """
-        sections = self.pq.outer_html().split("<h")
+        _pq = self.pq(self.info_selector)
+        _tag = getattr(self, "chunker", "<h")
+        sections = _pq.outer_html().split(_tag)
 
         for index, section in enumerate(sections[1::]):
-            section_content = PyQuery(f"<h{section}")
+            section_content = PyQuery(f"{_tag}{section}")
 
             header_search = re.search(r"<h\d>(.*?)</h\d>", section_content.outer_html())
             if header_search:
@@ -84,4 +81,4 @@ class ChunkHTMLMixin(ChunkTextMixin):
                 chunk_links = [
                     i for i in section_links if i.keys() & set(chunk_text.split())
                 ]
-                yield (index, cindex, section_title, chunk_text, chunk_links)
+                yield (self.pq, index, cindex, section_title, chunk_text, chunk_links)
