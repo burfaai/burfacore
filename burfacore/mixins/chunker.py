@@ -72,7 +72,7 @@ class ChunkHTMLMixin(ChunkTextMixin):
         header_match = re.search(r"<h\d>(.*?)</h\d>", section_content.outer_html())
         if header_match:
             return PyQuery(header_match.group()).text()
-        return section_content("> p:first").text().split("\n", maxsplit=1)[0]
+        return section_content("p:first").text().split("\n", maxsplit=1)[0]
 
     @staticmethod
     def extract_links(section_content: PyQuery) -> dict[str, str]:
