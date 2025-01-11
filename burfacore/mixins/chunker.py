@@ -27,20 +27,6 @@ class ChunkTextMixin:
             yield Sentence(" ".join(chunk_tokens))
             tokens = tokens[self.context_window :]
 
-    def _filter_sentences(self, sentences: WordList) -> Generator[Sentence, None, None]:
-        """
-        Filter out sentences that are too short or too long.
-
-        Args:
-            sentences (WordList): List of words from the sentence
-
-        Yields:
-            Sentence: Filtered sentences
-        """
-        for sentence in sentences:
-            if len(sentence) > 2:
-                yield sentence
-
     def text_chunks(self, context: str) -> Generator[Sentence, None, None]:
         """
         Chunk text into sentences that fit within the context window.
@@ -52,18 +38,17 @@ class ChunkTextMixin:
             Sentence: Combined sentences that fit within context window
         """
         current_chunk = Sentence("")
-        sentences: list[Sentence] = TextBlob(context).sentences
+        sentence: Sentence = Sentence(context)
 
-        for sentence in self._filter_sentences(sentences):
-            for sized_sentence in self._split_oversized_sentence(sentence.words):
-                combined_length = len(current_chunk.words) + len(sized_sentence.words)
+        for _sentence in self._split_oversized_sentence(sentence.words):
+            combined_length = len(current_chunk.words) + len(_sentence.words)
 
-                if combined_length < self.context_window:
-                    current_chunk = sized_sentence + Sentence(" ") + current_chunk
-                else:
-                    if current_chunk.words:
-                        yield current_chunk
-                    current_chunk = sized_sentence
+            if combined_length < self.context_window:
+                current_chunk += Sentence(" ") + _sentence
+            else:
+                if current_chunk.words:
+                    yield current_chunk
+                current_chunk = _sentence
 
         if current_chunk.words:
             yield current_chunk
@@ -87,7 +72,7 @@ class ChunkHTMLMixin(ChunkTextMixin):
         header_match = re.search(r"<h\d>(.*?)</h\d>", section_content.outer_html())
         if header_match:
             return PyQuery(header_match.group()).text()
-        return section_content("p:first").text().split("\n", maxsplit=1)[0]
+        return section_content("> p:first").text().split("\n", maxsplit=1)[0]
 
     @staticmethod
     def extract_links(section_content: PyQuery) -> dict[str, str]:
@@ -144,4 +129,4 @@ class ChunkHTMLMixin(ChunkTextMixin):
 
             for cidx, chunk in enumerate(self.text_chunks(section_content.text())):
                 chunk_links = {k: v for k, v in section_links.items() if k in chunk}
-                yield (self._pq, idx, cidx, section_title, str(chunk), chunk_links)
+                yield (self._pq, idx, cidx, section_title, chunk.string, chunk_links)
