@@ -46,6 +46,3 @@ class BurfaLogger:
     def _handler(self, exctype, value, tb):
         self.logger.exception(f"Uncaught exception: {value}")
         self.logger.exception("".join(traceback.format_exception(exctype, value, tb)))
-
-
-logger = BurfaLogger().get_logger()

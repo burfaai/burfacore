@@ -1,7 +1,5 @@
 from typing import Callable, Any
 
-from burfacore.utils.logger import logger
-
 
 class burfa_step:
     """_summary_: Decorator for Burfa Pipeline Step"""
@@ -12,12 +10,12 @@ class burfa_step:
     def __call__(self, *args, **kwargs):
         try:
             _result = self.func(*args, **kwargs)
-            logger.info(
+            print(
                 f"Called: {self.func.__name__}(**)\tDescription: {self.func.__doc__}..."
             )
             return _result
         except Exception as e:
-            logger.exception(
+            print(
                 f"Error at: {self.func.__name__}(**)\tDescription: {self.func.__doc__}\tError: {e}..."
             )
             raise ValueError(
