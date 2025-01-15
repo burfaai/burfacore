@@ -1,5 +1,6 @@
-from datetime import datetime
 from typing import Callable, Any
+
+from burfacore.utils.logger import logger
 
 
 class burfa_step:
@@ -11,12 +12,14 @@ class burfa_step:
     def __call__(self, *args, **kwargs):
         try:
             _result = self.func(*args, **kwargs)
-            _log = f"Timestamp: {datetime.now().isoformat()}\tCalled: {self.func.__name__}(**)\tDescription: {self.func.__doc__}...\n"
-            print(_log)
+            logger.info(
+                f"Called: {self.func.__name__}(**)\tDescription: {self.func.__doc__}..."
+            )
             return _result
         except Exception as e:
-            log = f"Timestamp: {datetime.now().isoformat()}\tError at: {self.func.__name__}(**)\tDescription: {self.func.__doc__}\tError: {e}...\n"
-            print(log)
+            logger.exception(
+                f"Error at: {self.func.__name__}(**)\tDescription: {self.func.__doc__}\tError: {e}..."
+            )
             raise ValueError(
                 f"Error in {self.func.__name__} Pipeline State: {e}"
             ) from e
