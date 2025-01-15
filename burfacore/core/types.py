@@ -130,6 +130,26 @@ class DatasetType(BurfaEnum):
     VIDEO = "video"
 
 
+class DatasetFormat(BurfaEnum):
+    """_summary_: Enum for Burfa Dataset Format"""
+
+    CSV = "csv"
+    JSON = "json"
+    SQLITE = "sqlite"
+    EXCEL = "excel"
+    TXT = "txt"
+    DOCX = "docx"
+    PDF = "pdf"
+    MP3 = "mp3"
+    WAV = "wav"
+    MIDI = "midi"
+    PNG = "png"
+    JPG = "jpg"
+    GIF = "gif"
+    MP4 = "mp4"
+    MOV = "mov"
+
+
 class TabularFormat(BurfaEnum):
     """_summary_: Enum for Burfa Text Output Format"""
 
