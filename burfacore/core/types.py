@@ -22,7 +22,6 @@ class Continent(BurfaEnum):
     NORTH_AMERICA = "north america"
     SOUTH_AMERICA = "south america"
     AUSTRALIA = "australia"
-    ANY = "any continent"
 
 
 class Country(BurfaEnum):
@@ -38,7 +37,6 @@ class Country(BurfaEnum):
     SPAIN = "spain"
     JAPAN = "japan"
     CHINA = "china"
-    ANY = "any country"
 
 
 class Language(BurfaEnum):
@@ -59,17 +57,7 @@ class ComponentType(BurfaEnum):
     FEATURES = "features"
     GUIDELINES = "guidelines"
     DATASET = "dataset"
-
-
-class DatasetType(BurfaEnum):
-    """_summary_: Burfa Dataset Type Enum."""
-
-    TABULAR = "tabular"
-    DATABASE = "database"
-    DOCUMENT = "document"
-    AUDIO = "audio"
-    IMAGE = "image"
-    VIDEO = "video"
+    MODEL = "model"
 
 
 class Sector(BurfaEnum):
@@ -88,7 +76,6 @@ class Sector(BurfaEnum):
     LAW_ENFORCEMENT = "law enforcement"
     MEDIA = "media"
     RETAIL = "retail"
-    ANY = "any"
 
 
 class TaskType(BurfaEnum):
@@ -113,7 +100,7 @@ class ComplianceCategory(BurfaEnum):
     TRANSPARENCY = "transparency"
     ACCOUNTABILITY = "accountability"
     EXPLAINABILITY = "explainability"
-    ANY = "any"
+    GOVERNANCE = "governance"
 
 
 class TrademarkType(BurfaEnum):
@@ -128,7 +115,19 @@ class EntityType(BurfaEnum):
     """_summary_: Enum for Burfa Entity Type"""
 
     DEVELOPER = "developer"
+    DEPLOYER = "deployer"
     CONSUMER = "consumer"
+
+
+class DatasetType(BurfaEnum):
+    """_summary_: Burfa Dataset Type Enum."""
+
+    TABULAR = "tabular"
+    DATABASE = "database"
+    DOCUMENT = "document"
+    AUDIO = "audio"
+    IMAGE = "image"
+    VIDEO = "video"
 
 
 class TabularFormat(BurfaEnum):
@@ -168,6 +167,7 @@ class ImageFormat(BurfaEnum):
 
     PNG = "png"
     JPG = "jpg"
+    GIF = "gif"
 
 
 class VideoFormat(BurfaEnum):

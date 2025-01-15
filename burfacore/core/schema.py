@@ -83,8 +83,8 @@ class BurfaContext(BurfaBase):
         description="Continent of the component",
         example=Continent.get_values(),
     )
-    country: list[Country] = Field(
-        default=[Country.ANY.value],
+    country: list[Country] | None = Field(
+        default=None,
         title="Component Country",
         description="Country of the component",
         example=Country.get_values(),
@@ -95,8 +95,8 @@ class BurfaContext(BurfaBase):
         description="State of the component",
         example="California",
     )
-    sector: list[Sector] = Field(
-        default=[Sector.ANY.value],
+    sector: list[Sector] | None = Field(
+        default=None,
         title="Business Domain",
         description="Business domain of the component",
         example=Sector.get_values(),
